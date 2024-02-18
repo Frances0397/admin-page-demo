@@ -25,6 +25,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "assets": [
+      "./assets/font"
+    ],
+    "fonts": [
+      {
+        "fontFamily": "Manrope",
+        "src": "./assets/fonts/Manrope-VariableFont_wght.ttf"
+      }
+    ]
   }
 }
