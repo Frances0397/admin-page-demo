@@ -16,6 +16,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Divider } from '@rneui/themed';
 import { TextInput, List, Button } from 'react-native-paper';
 
+import Contracts from './fragments/contracts';
+
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
   //const Drawer = createDrawerNavigator();
@@ -82,8 +84,7 @@ export default function App() {
             </View>
             <Divider style={{ width: '100%', heigth: 10 }} />
             <View style={styles.inputSection}>
-              <Text style={styles.inputSectionTitle}>Titolo sezione 2</Text>
-              <Text style={styles.inputSectionText}>Open up App.js to start working on your app!</Text>
+              <Contracts />
             </View>
             <Divider style={{ width: '100%', heigth: 10 }} />
             <View style={styles.inputSection}>
