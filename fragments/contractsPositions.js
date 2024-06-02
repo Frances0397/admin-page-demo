@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { DataTable, FAB } from 'react-native-paper';
+import { Button, DataTable, FAB, TextInput } from 'react-native-paper';
 import { useState, useEffect } from 'react';
 import { Dialog } from '@rneui/base';
+import { DatePickerInput } from 'react-native-paper-dates';
+import { DialogButton } from '@rneui/base/dist/Dialog/Dialog.Button';
 
 export default function ContractsPositions() {
 
@@ -17,6 +19,10 @@ export default function ContractsPositions() {
     useEffect(() => {
         console.log(dummy);
     }, [])
+
+    const saveRow = () => {
+        setDummy([...dummy, { id: 2, oda: 12341234, date: '02/06/2024', descrizione: 'add dummy', totale: 50.00 }]);
+    }
 
     return (
         <View style={styles.positionsContainer}>
@@ -43,9 +49,19 @@ export default function ContractsPositions() {
             <Dialog
                 isVisible={addVisible}
                 onBackdropPress={() => setAddVisible(false)}
+                overlayStyle={{ backgroundColor: 'white', color: 'white', borderRadius: 15 }}
             >
-                <Dialog.Title title="Dialog Title" />
+                <Dialog.Title title="Aggiungi riga contratto" />
+                <View style={{ flexDirection: 'row', marginVertical: 15 }}>
+                    <TextInput placeholder='Numero Ordine' style={{ marginRight: '20' }} />
+                    <DatePickerInput locale='it' label='Data' />
+                </View>
+                <TextInput placeholder='Descrizione' mode='outlined' />
                 <Text style={{ color: 'red' }}>Dialog body text. Add relevant information here.</Text>
+                <View style={{ flexDirection: 'row', marginTop: 25, marginLeft: '80%' }}>
+                    <Button mode='contained' style={{ marginRight: 10 }} onPress={saveRow}>Salva</Button>
+                    <Button mode='contained-tonal'>Annulla</Button>
+                </View>
             </Dialog>
         </View>
     )
