@@ -5,7 +5,7 @@ import { Dialog } from '@rneui/base';
 import { DatePickerInput } from 'react-native-paper-dates';
 import { DialogButton } from '@rneui/base/dist/Dialog/Dialog.Button';
 
-export default function ContractsPositions() {
+export default function ContractsPositions(header) {
 
     const [addVisible, setAddVisible] = useState(false);
     const [dummy, setDummy] = useState([{
@@ -18,6 +18,7 @@ export default function ContractsPositions() {
 
     useEffect(() => {
         console.log(dummy);
+        console.log("header ------", header);
     }, [])
 
     const saveRow = () => {
@@ -34,6 +35,7 @@ export default function ContractsPositions() {
                     <DataTable.Title>Data</DataTable.Title>
                     <DataTable.Title>Descrizione</DataTable.Title>
                     <DataTable.Title>Totale</DataTable.Title>
+                    <DataTable.Title></DataTable.Title>
                 </DataTable.Header>
                 {dummy.map((item, index) => (
                     <DataTable.Row key={item.id}>
@@ -42,6 +44,7 @@ export default function ContractsPositions() {
                         <DataTable.Cell>{item.date}</DataTable.Cell>
                         <DataTable.Cell>{item.descrizione}</DataTable.Cell>
                         <DataTable.Cell>{item.totale}</DataTable.Cell>
+                        <DataTable.Cell><Button icon='delete-outline' /></DataTable.Cell>
                     </DataTable.Row>
                 ))}
             </DataTable>

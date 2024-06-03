@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import { DatePickerInput } from 'react-native-paper-dates';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, Searchbar, TextInput } from 'react-native-paper';
 
 import ContractsPositions from './contractsPositions';
 
@@ -14,7 +14,12 @@ export default function Contracts() {
     const [selectedCustomer, setSelectedCustomer] = useState({});
     const [contractDate, setContractDate] = useState(null);
     const [headerSaved, setHeaderSaved] = useState(false);
-    // const [isOpen, setIsOpen] = useState
+    // const [isOpen, setIsOpen] = useState 
+    const [contractType, setContractType] = useState('');
+    const [description, setDescription] = useState('');
+    const [notes, setNotes] = useState('');
+    const [contractHeader, setContractHeader] = useState({});
+    const [headerDialogvisible, setHeaderDialogVisible] = useState(false);
 
     const fetchCustomers = async () => {
         let response = await axios.get('https://gtr-express.onrender.com/customers');
@@ -36,15 +41,52 @@ export default function Contracts() {
         setTypes(response.data);
     }
 
+    const fetchContracts = async () => {
+        //TODO
+    }
+
     useEffect(() => {
         fetchTypes();
     }, [])
 
+    const saveContractHeader = () => {
+        setHeaderSaved(true);
+        let newContractHeader = {
+            customer: selectedCustomer.nome,
+            contract_date: contractDate,
+            contract_type: contractType.contract_type,
+            description: description,
+            notes: notes
+        }
+        setContractHeader(newContractHeader);
+        console.log("PROVA", newContractHeader);
+        console.log(contractHeader);
+    }
+
+    //searchbar contratti
+    const matchcodeContracts = () => {
+        fetchContracts();
+        setHeaderDialogVisible(true);
+    }
+
+    const searchContract = () => {
+        //TODO
+        setHeaderSaved(true);
+    }
+
+    const clearContract = () => {
+        setHeaderSaved(false);
+    }
 
 
     return (
         <View>
-            <Text style={styles.inputSectionTitle} >Aggiungi contratto</Text >
+            <Text style={styles.inputSectionTitle} >Aggiungi/Modifica contratto</Text >
+            <Searchbar placeholder="Numero contratto" style={{ marginVertical: 15, marginBottom: 25 }} traileringIcon='magnify'
+                icon='folder-outline' onIconPress={matchcodeContracts} onTraileringIconPress={searchContract}
+                editable={headerSaved}
+            >
+            </Searchbar>
             <View style={{ flexDirection: 'row', flex: 1 }}>
                 <View>
                     <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 15 }}>
@@ -81,6 +123,7 @@ export default function Contracts() {
                             searchInputTxtColor={'#151E26'}
                             searchPlaceHolder={'Search here'}
                             searchPlaceHolderColor={'#72808D'}
+                            disabled={headerSaved}
                         />
                     </View>
                     <View styles={{ margin: 15, marginTop: 20 }}>
@@ -90,17 +133,19 @@ export default function Contracts() {
                             value={contractDate}
                             onChange={(d) => setContractDate(d)}
                             inputMode="start"
+                            disabled={headerSaved}
                         />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <Text style={styles.selectorLabel}>Tipologia*:   </Text>
                         <SelectDropdown
+                            disabled={headerSaved}
                             data={contract_types}
                             // defaultValueByIndex={8} // use default value by index or default value
                             // defaultValue={'kiss'} // use default value by index or default value
                             onSelect={(selectedItem, index) => {
                                 console.log(selectedItem, index);
-                                setSelectedCustomer(selectedItem);
+                                setContractType(selectedItem);
                             }}
                             renderButton={(selectedItem, isOpen) => {
                                 return (
@@ -129,15 +174,17 @@ export default function Contracts() {
                         />
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                        <TextInput placeholder='Descrizione' style={{ marginRight: 20 }}></TextInput>
-                        <TextInput placeholder='Note' mode='outlined'></TextInput>
+                        <TextInput placeholder='Descrizione' style={{ marginRight: 20 }} onChangeText={(text) => setDescription(text)}
+                            editable={!headerSaved}></TextInput>
+                        <TextInput placeholder='Note' mode='outlined' onChangeText={(text) => { setNotes(text) }}
+                            editable={!headerSaved}></TextInput>
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 30 }}>
-                        <Button style={{ marginLeft: 280, marginRight: 15 }} mode='outlined'>Annulla</Button>
-                        <Button mode='contained' onPress={() => setHeaderSaved(true)} disabled={headerSaved}>Salva</Button>
+                        <Button style={{ marginLeft: 280, marginRight: 15 }} mode='outlined' onPress={clearContract}>Annulla</Button>
+                        <Button mode='contained' onPress={saveContractHeader} disabled={headerSaved}>Salva</Button>
                     </View>
                 </View>
-                {headerSaved ? <ContractsPositions /> : <></>}
+                {headerSaved ? <ContractsPositions header={contractHeader} /> : <></>}
             </View>
         </View>
     );
